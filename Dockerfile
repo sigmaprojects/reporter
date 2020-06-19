@@ -1,5 +1,13 @@
 FROM node:14
 
+
+ENV PORT=8080
+ENV MONGO_HOST=192.168.1.76
+ENV MONGO_PORT=27017
+ENV MONGO_DATABASE=reporter
+ENV MONGO_USER=reporter
+ENV MONGO_PASS=reporter
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -15,5 +23,5 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
+EXPOSE $PORT
 CMD [ "node", "server.js" ]
