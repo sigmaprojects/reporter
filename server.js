@@ -1,4 +1,6 @@
 // openweather api key dde2fe1be622c8ef2b67a592b13b6e24
+const PORT = process.env.PORT || 8080;
+
 const express = require('express');
 const app = express();
 
@@ -33,29 +35,9 @@ app.get('/broadcasters', async (req, res) => {
     }
 });
 
-//app.all to listen for all verbs at an endpoint
-//.all can be used for validation and stuff as a pre handler!
-
-app.get("/user-create", async (req, res) => {
-    console.log('body, ', req.body);
-    console.log('params, ', req.params);
-    console.log('query, ', req.query);
-    const bc = new Broadcaster({ name: "tes2343t2" });
-    await bc.save().then(() => console.log("bc created"));
-    res.send("bc created \n " + req );
-});
-
-app.all('/all', async (req, res, next) => {
-    try {
-        var broadcaster = await BroadcasterService.getOrCreateByName( req.query.name );
-        return res.status(200).json({ status: 200, data: broadcaster, message: "Succesfully Broadcaster Retrieved" });
-    } catch (e) {
-        return res.status(500).json({ status: 500, message: e.message });
-    }
-});
 
 // Listen to the App Engine-specified port, or 8080 otherwise
-const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });

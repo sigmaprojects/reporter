@@ -14,8 +14,7 @@ router.use(formidableMiddleware());
 
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
-    console.log('Time: ', Date.now())
-    
+    //console.log('Time: ', Date.now())
     // make the lookups case insensitive 
     if( req.fields ) {
         req.fields = new Proxy(req.fields, {
@@ -32,9 +31,24 @@ router.use(function timeLog (req, res, next) {
     next()
 })
 
+router.get('/search', async (req, res) => {
+    Object.assign(req.fields, req.query); // merge the two
 
-// define the about route
-router.post('/', async (req, res) => {
+    var now = new Date();
+
+    const termals = await ThermalService.search({
+        broadcaster: "5ee6fef97e10b402ba9400f9",
+        startDate: now.setDate(now.getDate()-50),
+        endDate: now.setDate(now.getDate()+50),
+        max: 100,
+        offset: 0
+    });
+
+    return res.status(200).json({ status: 200, data: termals, message: "Sending." });
+    
+})
+
+router.post('/save', async (req, res) => {
     try {
 
     Object.assign(req.fields, req.query); // merge the two

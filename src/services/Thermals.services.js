@@ -1,7 +1,7 @@
 const Thermals = require('../models/Thermals.model');
 
 const weather = require('openweather-apis');
-//const e = require('express');
+
 const util = require('util');
 
 /**
@@ -42,6 +42,30 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
 
     //return await thermal;
     return await thermal.save().then(() => thermal);
+}
+
+/**
+   * @param {string} broadcasterid
+   * @param {Date} startDate
+   * @param {Date} endDate
+   * @param {number} max
+   * @param {number} offset
+   */ 
+  exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0}) {
+    
+    //const thermals =
+    return await Thermals.find({
+        broadcasterid: broadcasterid,
+        created: { $gte: startDate },
+        created: { $lte: endDate },
+    })
+        .sort({ created: 'desc' })
+        .skip(offset) //Notice here
+        .limit(max)
+    ;
+
+    //return await thermal;
+    //return await thermals;
 }
 
 exports._notdefined = async function (id) {
