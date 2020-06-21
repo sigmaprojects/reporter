@@ -4,13 +4,13 @@ const PORT = process.env.PORT || 8080;
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 const connectDb = require('./src/connection');
-const Broadcaster = require('./src/models/Broadcaster.model');
-
-const BroadcasterService = require('./src/services/Broadcaster.services') ;
 
 const ThermalsRoute = require('./src/routes/thermals');
+
+const BroadcastersRoute = require('./src/routes/broadcasters');
 
 process.on('uncaughtException', (error)  => {
     console.log('Oh my god, something terrible happend: ',  error);
@@ -21,19 +21,15 @@ process.on('unhandledRejection', (error, promise) => {
     console.log(' The error was: ', error );
 });
 
+// enable ALL cors requsts
+app.use(cors())
+
 app.use('/thermals', ThermalsRoute);
+
+app.use('/broadcasters', BroadcastersRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello from App Engine!!!');
-});
-
-app.get('/broadcasters', async (req, res) => {
-    try {
-        const broadcasters = await Broadcaster.find();
-        res.json(broadcasters);
-    } catch(e) {
-        console.error(e);
-    }
 });
 
 
