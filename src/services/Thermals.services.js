@@ -51,13 +51,14 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
    * @param {number} max
    * @param {number} offset
    */ 
-  exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0}) {
-    
+  exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0, type = 'system'}) {
+
     //const thermals =
     return await Thermals.find({
         broadcasterid: broadcasterid,
         created: { $gte: startDate },
         created: { $lte: endDate },
+        type: type
     })
         .sort({ created: 'desc' })
         .skip(offset) //Notice here

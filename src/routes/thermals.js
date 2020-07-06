@@ -36,6 +36,7 @@ router.get('/search', async (req, res) => {
 
     var now = new Date();
 
+    /*
     const termals = await ThermalService.search({
         broadcaster: "5ee6fef97e10b402ba9400f9",
         startDate: now.setDate(now.getDate()-50),
@@ -43,6 +44,18 @@ router.get('/search', async (req, res) => {
         max: 100,
         offset: 0
     });
+    */
+
+    const termals = await ThermalService.search({
+        broadcasterid: req.fields.broadcasterid | "5ef8f42d8746412c108fe393",
+        type: req.fields.type | "system",
+        startDate: req.fields.startDate | now.setDate(now.getDate()-50),
+        endDate: req.fields.endDate | now.setDate(now.getDate()+50),
+        max: req.fields.max | 100,
+        offset: req.fields.offset | 0
+    });
+
+   
 
     return res.status(200).json({ status: 200, data: termals, message: "Sending." });
     
