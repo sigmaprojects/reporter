@@ -45,12 +45,30 @@ router.get('/search', async (req, res) => {
         offset: 0
     });
     */
+    let d = new Date();
+
+    //console.log( req.fields )
+
+    if( !req.fields.startDate ) {
+        req.fields.startDate = d.setDate(d.getDate()-50)
+    } else {
+        req.fields.startDate = new Date(req.fields.startDate)
+    }
+
+    if( !req.fields.endDate ) {
+        req.fields.endDate = d.setDate(d.getDate()+50)
+    } else {
+        let end = new Date(req.fields.endDate);
+        req.fields.endDate = new Date(end.setDate(end.getDate()+1))
+    }
+
+    //console.log( req.fields )
 
     const termals = await ThermalService.search({
         broadcasterid: req.fields.broadcasterid | "5ef8f42d8746412c108fe393",
         type: req.fields.type | "system",
-        startDate: req.fields.startDate | now.setDate(now.getDate()-50),
-        endDate: req.fields.endDate | now.setDate(now.getDate()+50),
+        startDate: req.fields.startDate,
+        endDate: req.fields.endDate,
         max: req.fields.max | 100,
         offset: req.fields.offset | 0
     });

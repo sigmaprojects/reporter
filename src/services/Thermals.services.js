@@ -4,6 +4,8 @@ const weather = require('openweather-apis');
 
 const util = require('util');
 
+const moment = require('moment');
+
 /**
    * @param {<Broadcaster>} broadcaster
    * @param {string} type
@@ -53,14 +55,33 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
    */ 
   exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0, type = 'system'}) {
 
-    //const thermals =
+    /*  this is fucking stupid, rewrite this date crap
+    console.log({
+        startDate: startDate,
+        endDate: endDate,
+        iso: moment(endDate).toISOString(),
+        $gte: moment(startDate).unix()*1000,
+        $lte: moment(endDate).unix()*1000
+    })
+    */
+
     return await Thermals.find({
         broadcasterid: broadcasterid,
+        /*
         created: { $gte: startDate },
         created: { $lte: endDate },
-        type: type
+        */
+       created: {
+            /*
+            $gte: moment(startDate),
+            $lte: ISODate(endDate)
+            */
+            $gte: moment(startDate).unix()*1000,
+            $lte: moment(endDate).unix()*1000
+        },
+        // type: type
     })
-        .sort({ created: 'desc' })
+        .sort({ created: -1 })
         .skip(offset) //Notice here
         .limit(max)
     ;
