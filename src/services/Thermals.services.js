@@ -55,6 +55,7 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
    */ 
   exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0, type = 'system'}) {
 
+
     /*  this is fucking stupid, rewrite this date crap
     console.log({
         startDate: startDate,
@@ -63,7 +64,7 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
         $gte: moment(startDate).unix()*1000,
         $lte: moment(endDate).unix()*1000
     })
-    */
+     */
 
     return await Thermals.find({
         broadcasterid: broadcasterid,
@@ -76,8 +77,12 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
             $gte: moment(startDate),
             $lte: ISODate(endDate)
             */
+            /*
             $gte: moment(startDate).unix()*1000,
             $lte: moment(endDate).unix()*1000
+            */
+           $gte: new Date(startDate),
+           $lte: new Date(endDate)
         },
         // type: type
     })

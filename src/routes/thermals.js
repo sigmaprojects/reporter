@@ -48,7 +48,7 @@ router.get('/search', async (req, res) => {
     let d = new Date();
 
     //console.log( req.fields )
-
+    /*
     if( !req.fields.startDate ) {
         req.fields.startDate = d.setDate(d.getDate()-50)
     } else {
@@ -61,14 +61,15 @@ router.get('/search', async (req, res) => {
         let end = new Date(req.fields.endDate);
         req.fields.endDate = new Date(end.setDate(end.getDate()+1))
     }
+    */
 
     //console.log( req.fields )
 
     const termals = await ThermalService.search({
         broadcasterid: req.fields.broadcasterid | "5ef8f42d8746412c108fe393",
         type: req.fields.type | "system",
-        startDate: req.fields.startDate,
-        endDate: req.fields.endDate,
+        startDate: req.fields.startDate | 0,
+        endDate: req.fields.endDate | 999999999999999,
         max: req.fields.max | 100,
         offset: req.fields.offset | 0
     });
