@@ -66,6 +66,16 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
     })
      */
 
+    console.log({
+        section: 'Thermal Search Arguments',
+        broadcasterid: broadcasterid,
+        startDate: startDate,
+        endDate: endDate,
+        type: type,
+        max: max,
+        offset: offset
+    })
+
     return await Thermals.find({
         broadcasterid: broadcasterid,
         /*
