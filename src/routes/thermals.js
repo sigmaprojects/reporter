@@ -2,6 +2,7 @@ var express = require('express')
 
 const BroadcasterService = require('../services/Broadcaster.services') ;
 const ThermalService = require('../services/Thermals.services') ;
+const Broadcaster = require('../models/Broadcaster.model');
 
 const AllowedTermalTypes = ['generic', 'system', 'cpu', 'drive', 'battery'];
 
@@ -34,6 +35,12 @@ router.use(function timeLog (req, res, next) {
 router.get('/search', async (req, res) => {
     Object.assign(req.fields, req.query); // merge the two
 
+    if( !req.fields.broadcaster ) {
+        req.fields.broadcaster = "5ef8f42d8746412c108fe393"
+    }
+
+    
+
     var now = new Date();
 
     /*
@@ -63,15 +70,16 @@ router.get('/search', async (req, res) => {
     }
     */
 
-    //console.log( req.fields )
+    console.log( req.fields )
+    //console.log('broadcaster? ', broadcaster);
 
     const termals = await ThermalService.search({
-        broadcasterid: req.fields.broadcasterid | "5ef8f42d8746412c108fe393",
-        type: req.fields.type | "system",
-        startDate: req.fields.startDate | 0,
-        endDate: req.fields.endDate | 999999999999999,
-        max: req.fields.max | 100,
-        offset: req.fields.offset | 0
+        broadcaster: req.fields.broadcaster,
+        type: req.fields.type,
+        startDate: parseInt(req.fields.startDate),
+        endDate: parseInt(req.fields.endDate),
+        max: req.fields.max,
+        offset: req.fields.offset
     });
 
    

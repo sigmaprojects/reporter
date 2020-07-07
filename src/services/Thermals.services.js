@@ -6,6 +6,8 @@ const util = require('util');
 
 const moment = require('moment');
 
+var ObjectId = require('mongodb').ObjectId;
+
 /**
    * @param {<Broadcaster>} broadcaster
    * @param {string} type
@@ -47,13 +49,13 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
 }
 
 /**
-   * @param {string} broadcasterid
+   * @param {string} broadcaster
    * @param {Date} startDate
    * @param {Date} endDate
    * @param {number} max
    * @param {number} offset
    */ 
-  exports.search = async function({broadcasterid, startDate, endDate, max = 100, offset = 0, type = 'system'}) {
+  exports.search = async function({broadcaster, startDate, endDate, max = 100, offset = 0, type = 'system'}) {
 
 
     /*  this is fucking stupid, rewrite this date crap
@@ -68,37 +70,25 @@ exports.create = async function({broadcaster, type, temps, humidity, zipcode = '
 
     console.log({
         section: 'Thermal Search Arguments',
-        broadcasterid: broadcasterid,
-        startDate: startDate,
-        endDate: endDate,
+        broadcaster: ObjectId(broadcaster),
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
         type: type,
         max: max,
         offset: offset
     })
 
     return await Thermals.find({
-        broadcasterid: broadcasterid,
-        /*
-        created: { $gte: startDate },
-        created: { $lte: endDate },
-        */
-       created: {
-            /*
-            $gte: moment(startDate),
-            $lte: ISODate(endDate)
-            */
-            /*
-            $gte: moment(startDate).unix()*1000,
-            $lte: moment(endDate).unix()*1000
-            */
-           $gte: new Date(startDate),
-           $lte: new Date(endDate)
+        broadcaster: ObjectId(broadcaster),
+        created: {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate)
         },
-        // type: type
+        type: type
     })
         .sort({ created: -1 })
-        .skip(offset) //Notice here
-        .limit(max)
+        .skip( parseInt(offset) ) //Notice here
+        .limit( parseInt(max) )
     ;
 
     //return await thermal;
